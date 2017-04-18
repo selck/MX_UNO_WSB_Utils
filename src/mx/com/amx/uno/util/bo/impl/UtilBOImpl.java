@@ -5,9 +5,17 @@ import java.io.FileOutputStream;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Properties;
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jettison.json.JSONObject;
@@ -141,6 +149,92 @@ public class UtilBOImpl implements IUtilBO {
 			logger.error("Error getParameters [BO]: ",e);
 		}		
 		return listParams;
+	}
+
+	@Override
+	public boolean sendEmail(String asunto, String bodyMsg,
+			String[] recipients, String[] recipientesCC, String smtpsender) throws UtilBOException {
+		
+		ParametrosDTO parametrosDTO=Utileria.getProperties();
+		Properties props = new Properties();
+		
+		String smtpserver=parametrosDTO.getSmtpserver();
+		//String smtpsender=parametrosDTO.getSmtpsender();
+		String smtpAutenUserName=parametrosDTO.getSmtpAutenUserName();
+		String smtpAutenPassword=parametrosDTO.getSmtpAutenPassword();
+		String subject=asunto;
+		String from = smtpsender;
+	    
+	    boolean salida=false;
+	    String to[] =recipients;
+	    String mensajeOrigen=bodyMsg;
+	    
+	    for(String quien:to){
+	    	logger.debug("to        : "+quien);
+	    }
+	    
+		String protocol = "smtp";
+	    props.put("mail.smtp.host", smtpserver);
+	    props.put("mail.from", from);
+	    props.put("mail." + protocol + ".auth", "true");
+	    
+	    Session session = Session.getInstance(props, null);
+	    
+	    try {
+	    	// creates a new e-mail message
+	        MimeMessage msg = new MimeMessage(session);
+	        msg.setFrom();
+	        //msg.setSender(new InternetAddress("contacto@heroesporlavida.org"));
+	        InternetAddress[] addressTo = new InternetAddress[to.length];
+            for (int i = 0; i < to.length; i++){
+                addressTo[i] = new InternetAddress(to[i]);
+            }
+            
+            InternetAddress[] recipientesCCArray=null;
+            
+            if(recipientesCC!=null && recipientesCC.length>0){
+            	recipientesCCArray= new InternetAddress[recipientesCC.length];
+                for (int i = 0; i < recipientesCC.length; i++){
+                	recipientesCCArray[i] = new InternetAddress(recipientesCC[i]);
+                }
+            }
+            
+	        msg.setRecipients(Message.RecipientType.TO,addressTo);
+	        if(recipientesCC!=null && recipientesCC.length>0){
+	        	msg.setRecipients(Message.RecipientType.CC, recipientesCCArray);
+	        }
+	        msg.setSubject(subject,"ISO-8859-1");
+	        msg.setSentDate(new Date());
+	        msg.setContent(mensajeOrigen, "text/html");
+	        
+	        // Create the message part 
+	         //BodyPart messageBodyPart = new MimeBodyPart();
+	         // Fill the message
+	         //messageBodyPart.setContent(mensajeOrigen, "text/html");
+	         // Create a multipar message
+	         //Multipart multipart = new MimeMultipart();
+	         // Set text message part
+	         //multipart.addBodyPart(messageBodyPart);
+
+	         // Part two is attachment
+	         //MimeBodyPart attachPart = new MimeBodyPart();
+	         //String attachFile = filePathPDF;
+	         //attachPart.attachFile(attachFile);
+	         //multipart.addBodyPart(attachPart);
+
+	         // Send the complete message parts
+	         //msg.setContent(multipart );
+	        Transport t = session.getTransport(protocol);
+	        t.connect(smtpserver,smtpAutenUserName, smtpAutenPassword);
+	        //t.connect(smtpServer, 25, smtpAutenUserName, smtpAutenPassword);
+	        t.sendMessage(msg, msg.getAllRecipients());
+	        salida=true;
+	    } catch (MessagingException mex) {
+	        //throw new Exception("send failed, exception: " + mex);
+	    	logger.error("Error sendMail: ",mex);
+	    } 
+	    return salida;
+
 	}
 
 }

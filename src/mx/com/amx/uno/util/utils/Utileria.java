@@ -22,12 +22,18 @@ public class Utileria {
 			parametros.setAmbiente(ambiente);
 			parametros.setPathSaveJsonWeb02(propsTmp.getProperty(ambiente+".pathSaveJsonWeb02"));
 			parametros.setPathShell(propsTmp.getProperty("pathShell"));
+			
+			
+			parametros.setSmtpAutenPassword(propsTmp.getProperty("smtpAutenPassword"));
+			parametros.setSmtpAutenUserName(propsTmp.getProperty("smtpAutenUserName"));
+			parametros.setSmtpsender(propsTmp.getProperty("smtpsender"));
+			parametros.setSmtpserver(propsTmp.getProperty("smtpserver"));
 		}catch (Exception e) {
 			logger.error("Error getProperties: ",e);
 		}
 		return parametros;
 	}
-	
+		
 	public static boolean transfiereWebServer(String rutaShell, String pathLocal, String pathRemote) {
 		boolean success = false;
 

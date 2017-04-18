@@ -40,4 +40,12 @@ public interface IUtilBO {
 	 * 
 	*/
 	ArrayList<ParametroDTO> getParameters() throws UtilBOException;
+	/*
+	 * Método que devuelve un booleano true para confirmar que se envio un emails
+	 *@author: Jesús Vicuña 
+	 * @version: 1.0
+	 * @return: Boolean
+	 * 
+	*/
+	boolean sendEmail(String asunto, String bodyMsg, String [] recipients, String[] recipientesCC, String smtpsender) throws UtilBOException;
 }
