@@ -122,6 +122,33 @@ public class UtilController {
 		response.setStatus(status_peticion);
 		return res;
 	}
+	
+	@RequestMapping(value={"sendEmail"}, method={org.springframework.web.bind.annotation.RequestMethod.POST}, headers={"Accept=application/json"})
+	@ResponseBody
+	Boolean sendEmail(@RequestParam("subject") String subject, @RequestParam("bodyMsg")String bodyMsg,
+			@RequestParam("recipients")String[] recipients, @RequestParam("recipientsCC")String[] recipientesCC, 
+			@RequestParam("smtpsender")String smtpsender,HttpServletResponse response) {
+		logger.info("sendEmail [Controller]");
+		String msj="OK";
+		String codigo="0";
+		String causa_error="";
+		int status_peticion=HttpServletResponse.SC_OK;
+		Boolean res=false;
+		try {
+			res=utilBOImpl.sendEmail(subject, bodyMsg, recipients, recipientesCC, smtpsender);
+		} catch (Exception e) {
+			logger.error("Error sendEmail [Controller]: ",e);
+			codigo="-1";
+			msj=e.getMessage();
+			causa_error=e.toString();
+			status_peticion=HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+		}
+		response.setHeader("codigo", codigo);
+		response.setHeader("mensaje", msj);
+		response.setHeader("causa_error", causa_error);
+		response.setStatus(status_peticion);
+		return res;
+	}
 	/**
 	 * @return the utilBOImpl
 	 */

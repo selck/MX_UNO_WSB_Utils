@@ -114,7 +114,10 @@ public class UtilBOImpl implements IUtilBO {
 		try {
 			ParametrosDTO parametrosDTO=Utileria.getProperties();
 			JSONObject jsonObject=new JSONObject(Utileria.cambiaCaracteresReverse(json));
-			logger.info("Json Recibido: "+jsonObject.toString());
+			
+			logger.debug("Json Recibido: "+jsonObject.toString());
+			logger.debug("nameJson: "+nameJson);
+			
 			file = new File(parametrosDTO.getPathSaveJsonWeb02() + nameJson+".json");
 			Writer out = new BufferedWriter(new OutputStreamWriter(
 					new FileOutputStream(file), "UTF8"));
@@ -152,7 +155,7 @@ public class UtilBOImpl implements IUtilBO {
 	}
 
 	@Override
-	public boolean sendEmail(String asunto, String bodyMsg,
+	public boolean sendEmail(String subject, String bodyMsg,
 			String[] recipients, String[] recipientesCC, String smtpsender) throws UtilBOException {
 		
 		ParametrosDTO parametrosDTO=Utileria.getProperties();
@@ -162,7 +165,6 @@ public class UtilBOImpl implements IUtilBO {
 		//String smtpsender=parametrosDTO.getSmtpsender();
 		String smtpAutenUserName=parametrosDTO.getSmtpAutenUserName();
 		String smtpAutenPassword=parametrosDTO.getSmtpAutenPassword();
-		String subject=asunto;
 		String from = smtpsender;
 	    
 	    boolean salida=false;
@@ -181,7 +183,6 @@ public class UtilBOImpl implements IUtilBO {
 	    Session session = Session.getInstance(props, null);
 	    
 	    try {
-	    	// creates a new e-mail message
 	        MimeMessage msg = new MimeMessage(session);
 	        msg.setFrom();
 	        //msg.setSender(new InternetAddress("contacto@heroesporlavida.org"));
@@ -226,11 +227,9 @@ public class UtilBOImpl implements IUtilBO {
 	         //msg.setContent(multipart );
 	        Transport t = session.getTransport(protocol);
 	        t.connect(smtpserver,smtpAutenUserName, smtpAutenPassword);
-	        //t.connect(smtpServer, 25, smtpAutenUserName, smtpAutenPassword);
 	        t.sendMessage(msg, msg.getAllRecipients());
 	        salida=true;
 	    } catch (MessagingException mex) {
-	        //throw new Exception("send failed, exception: " + mex);
 	    	logger.error("Error sendMail: ",mex);
 	    } 
 	    return salida;

@@ -8,7 +8,6 @@ public class ParametrosDTO {
 	
 	private String dominio;
 	private String smtpserver;
-	private String smtpsender;
 	private String smtpAutenUserName;
 	private String smtpAutenPassword;
 	
@@ -72,18 +71,6 @@ public class ParametrosDTO {
 	 */
 	public void setSmtpserver(String smtpserver) {
 		this.smtpserver = smtpserver;
-	}
-	/**
-	 * @return the smtpsender
-	 */
-	public String getSmtpsender() {
-		return smtpsender;
-	}
-	/**
-	 * @param smtpsender the smtpsender to set
-	 */
-	public void setSmtpsender(String smtpsender) {
-		this.smtpsender = smtpsender;
 	}
 	/**
 	 * @return the smtpAutenUserName

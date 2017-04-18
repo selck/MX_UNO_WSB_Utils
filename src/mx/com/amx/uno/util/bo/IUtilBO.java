@@ -47,5 +47,5 @@ public interface IUtilBO {
 	 * @return: Boolean
 	 * 
 	*/
-	boolean sendEmail(String asunto, String bodyMsg, String [] recipients, String[] recipientesCC, String smtpsender) throws UtilBOException;
+	boolean sendEmail(String subject, String bodyMsg, String [] recipients, String[] recipientesCC, String smtpsender) throws UtilBOException;
 }

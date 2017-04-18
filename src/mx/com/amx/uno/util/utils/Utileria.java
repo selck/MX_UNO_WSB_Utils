@@ -23,11 +23,11 @@ public class Utileria {
 			parametros.setPathSaveJsonWeb02(propsTmp.getProperty(ambiente+".pathSaveJsonWeb02"));
 			parametros.setPathShell(propsTmp.getProperty("pathShell"));
 			
-			
 			parametros.setSmtpAutenPassword(propsTmp.getProperty("smtpAutenPassword"));
 			parametros.setSmtpAutenUserName(propsTmp.getProperty("smtpAutenUserName"));
-			parametros.setSmtpsender(propsTmp.getProperty("smtpsender"));
 			parametros.setSmtpserver(propsTmp.getProperty("smtpserver"));
+			parametros.setDominio(propsTmp.getProperty("dominio"));
+			
 		}catch (Exception e) {
 			logger.error("Error getProperties: ",e);
 		}
